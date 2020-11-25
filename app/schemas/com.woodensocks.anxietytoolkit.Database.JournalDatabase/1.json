@@ -1,0 +1,49 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "c89bc721d5d68921f16ba98b77906ffd",
+    "entities": [
+      {
+        "tableName": "moodEntries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`dateid` INTEGER NOT NULL, `face_id` INTEGER NOT NULL, PRIMARY KEY(`dateid`))",
+        "fields": [
+          {
+            "fieldPath": "dateid",
+            "columnName": "dateid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "faceid",
+            "columnName": "face_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "dateid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_moodEntries_dateid",
+            "unique": true,
+            "columnNames": [
+              "dateid"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_moodEntries_dateid` ON `${TABLE_NAME}` (`dateid`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c89bc721d5d68921f16ba98b77906ffd')"
+    ]
+  }
+}
