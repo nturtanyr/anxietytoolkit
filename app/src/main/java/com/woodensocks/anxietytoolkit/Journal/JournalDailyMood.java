@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.CalendarView;
 import com.woodensocks.anxietytoolkit.Database.*;
 import com.woodensocks.anxietytoolkit.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +40,9 @@ public class JournalDailyMood extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    // Setup for Handler Object
+    private Handler UIHandler;
 
     public JournalDailyMood() {
         // Required empty public constructor
@@ -93,16 +100,25 @@ public class JournalDailyMood extends Fragment {
                 // If the date selected has changed, reset the date
                 dateid = (long) (10000 * year) + (100 * (month+1)) + dayOfMonth;
                 Log.d("Calendar","Date is now " +dateid.toString());
-                if(checkDatabaseForDate(dateid))
+                (new JournalDatabaseAsyncTask(UIHandler,dateid,db.moodEntryDao())).execute();
+            }
+        });
+
+        UIHandler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message inputMessage) {
+
+                if(inputMessage.what == 1)
                 {
-                    updateMoodDisplay(view);
+                    Log.d("Calendar","There was an entry found");
                 }
                 else
                 {
-                    showMoodOptions(view);
+                    Log.d("Calendar","No entry found for this date");
                 }
             }
-        });
+        };
+
     }
 
     private void showMoodOptions(CalendarView view) {
